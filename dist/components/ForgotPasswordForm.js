@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -21,6 +21,7 @@ const ForgotPasswordForm = props => {
     showRegister,
     showLogin
   } = props;
+  const formRef = useRef();
   const [email, setEmail] = useState("");
   const [processing, setProcessing] = useState(false);
   const handleEmailChanged = useCallback(evt => setEmail(evt.target.value));
@@ -28,13 +29,17 @@ const ForgotPasswordForm = props => {
     evt.preventDefault();
     evt.stopPropagation();
     if (processing) return false;
-    setProcessing(true); // Authenticate to get account info and access token
 
-    if (props.onLogin) {
-      props.onLogin();
+    if (formRef.current.reportValidity()) {
+      setProcessing(true); // Authenticate to get account info and access token
+
+      if (props.onResetPassword) {
+        props.onResetPassword();
+      }
     }
   });
   return /*#__PURE__*/React.createElement("form", {
+    ref: formRef,
     onSubmit: handleResetClicked
   }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     className: classes.header
@@ -50,6 +55,7 @@ const ForgotPasswordForm = props => {
     id: "email",
     type: "email",
     variant: "outlined",
+    disabled: processing,
     className: classes.textField,
     value: email,
     onChange: handleEmailChanged,
@@ -84,7 +90,7 @@ const ForgotPasswordForm = props => {
     onClick: handleResetClicked
   }, processing ? /*#__PURE__*/React.createElement(CircularProgress, {
     size: 20
-  }) : "Cài đặt mật khẩu mới"))), (showRegister || showLogin) && /*#__PURE__*/React.createElement(Grid, {
+  }) : "Đặt lại mật khẩu"))), (showRegister || showLogin) && /*#__PURE__*/React.createElement(Grid, {
     container: true,
     justify: "center",
     className: classes.links
@@ -103,12 +109,12 @@ ForgotPasswordForm.displayName = "ForgotPasswordForm";
 ForgotPasswordForm.defaultProps = {
   showRegister: true,
   showLogin: true,
-  onLogin: null
+  onResetPassword: null
 };
 ForgotPasswordForm.propTypes = {
   appId: PropTypes.string.isRequired,
   showRegister: PropTypes.bool,
   showLogin: PropTypes.bool,
-  onLogin: PropTypes.func
+  onResetPassword: PropTypes.func
 };
 export default ForgotPasswordForm;

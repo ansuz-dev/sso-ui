@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
@@ -24,6 +24,7 @@ const RegisterForm = props => {
     showLogin,
     showForgotPassword
   } = props;
+  const formRef = useRef();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,13 +38,17 @@ const RegisterForm = props => {
     evt.preventDefault();
     evt.stopPropagation();
     if (processing) return false;
-    setProcessing(true); // Authenticate to get account info and access token
 
-    if (props.onRegister) {
-      props.onRegister();
+    if (formRef.current.reportValidity()) {
+      setProcessing(true); // Authenticate to get account info and access token
+
+      if (props.onRegister) {
+        props.onRegister();
+      }
     }
   });
   return /*#__PURE__*/React.createElement("form", {
+    ref: formRef,
     onSubmit: handleRegisterClicked
   }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
     className: classes.header
@@ -59,6 +64,7 @@ const RegisterForm = props => {
     id: "name",
     type: "text",
     variant: "outlined",
+    disabled: processing,
     className: classes.textField,
     value: userName,
     onChange: handleNameChanged,
@@ -82,6 +88,7 @@ const RegisterForm = props => {
     id: "email",
     type: "email",
     variant: "outlined",
+    disabled: processing,
     className: classes.textField,
     value: email,
     onChange: handleEmailChanged,
@@ -106,6 +113,7 @@ const RegisterForm = props => {
     type: showPassword ? "text" : "password",
     autoComplete: "current-password",
     variant: "outlined",
+    disabled: processing,
     className: classes.textField,
     value: password,
     onChange: handlePasswordChanged,
@@ -152,7 +160,7 @@ const RegisterForm = props => {
     item: true,
     xs: 12,
     className: classes.link
-  }, "Qu\xEAn m\u1EADt kh\u1EA9u")))));
+  }, "Qu\xEAn m\u1EADt kh\u1EA9u?")))));
 };
 
 RegisterForm.displayName = "RegisterForm";

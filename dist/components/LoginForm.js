@@ -133,7 +133,7 @@ const LoginForm = props => {
     item: true,
     xs: 12,
     className: classes.link
-  }, "Qu\xEAn m\u1EADt kh\u1EA9u")))));
+  }, "Qu\xEAn m\u1EADt kh\u1EA9u?")))));
 };
 
 LoginForm.displayName = "LoginForm";
