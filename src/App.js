@@ -1,13 +1,25 @@
 import React from "react";
 import {Grid} from "@material-ui/core";
 
-import LoginForm from "./components/loginform";
+import {LoginForm, RegisterForm, ForgotPasswordForm} from "./components";
 
 const App = () => (
   <div>
     <Grid container justify="center">
       <Grid xs={12} sm={6} md={4}>
-        <LoginForm />
+        <LoginForm appId="hello_word" />
+      </Grid>
+    </Grid>
+
+    <Grid container justify="center">
+      <Grid xs={12} sm={6} md={4}>
+        <RegisterForm appId="hello_word" />
+      </Grid>
+    </Grid>
+
+    <Grid container justify="center">
+      <Grid xs={12} sm={6} md={4}>
+        <ForgotPasswordForm appId="hello_word" />
       </Grid>
     </Grid>
   </div>

@@ -7,7 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "publish:npm": "rm -rf dist && mkdir dist &&  babel src/components -d dist --copy-files",
+    "publish:npm": "rm -rf dist && mkdir dist && babel src/components -d dist/components --copy-files && cp -r src/styles dist/",
     "lint": "eslint src"
   },
   "author": "AnsuzDev",
@@ -19,7 +19,6 @@
   "bugs": {
     "url": "https://github.com/ansuz-dev/sso-ui/issues"
   },
-  "homepage": "https://github.com/ansuz-dev/sso-ui#readme",
   "eslintConfig": {
     "extends": [
       "react-app",
