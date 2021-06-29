@@ -1,6 +1,7 @@
 import React, {useCallback, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import {makeStyles} from "@material-ui/core/styles";
+import SSO from "@ansuzdev/sso";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -14,32 +15,43 @@ import Email from "@material-ui/icons/Email";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Visibility from "@material-ui/icons/Visibility";
 
-import Card from "./Card";
-import AppInfo from "./AppInfo";
+import formStyle from "../styles/formStyle.js";
 
-import formStyle from "../styles/formStyle";
+import Card from "./Card.js";
+import AppInfo from "./AppInfo.js";
 
 const useStyles = makeStyles(formStyle);
 
 // eslint-disable-next-line max-lines-per-function
-const LoginForm = props => {
+const LoginForm = ({
+  appId,
+  showRegister,
+  showForgotPassword,
+  onLogin,
+  onRegister,
+  onForgotPassword,
+}) => {
   const classes = useStyles();
-
-  const {
-    appId,
-    showRegister,
-    showForgotPassword,
-  } = props;
 
   const formRef = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  const handleEmailChanged = useCallback(evt => setEmail(evt.target.value));
-  const handlePasswordChanged = useCallback(evt => setPassword(evt.target.value));
-  const handleShowPasswordClicked = useCallback(() => setShowPassword(!showPassword));
+  const handleEmailChanged = useCallback(
+    evt => setEmail(evt.target.value),
+    [],
+  );
+  const handlePasswordChanged = useCallback(
+    evt => setPassword(evt.target.value),
+    [],
+  );
+  const handleShowPasswordClicked = useCallback(
+    () => setShowPassword(!showPassword),
+    [showPassword],
+  );
   const handleLoginClicked = useCallback(evt => {
     evt.preventDefault();
     evt.stopPropagation();
@@ -50,11 +62,26 @@ const LoginForm = props => {
       setProcessing(true);
       // Authenticate to get account info and access token
 
-      if (props.onLogin) {
-        props.onLogin();
-      }
+      const ssoApi = new SSO({
+        baseUrl: "https://sso.ansuzdev.com",
+        appId,
+      });
+
+      ssoApi.login({email, password})
+        .then(data => {
+          setHasError(false);
+          setProcessing(false);
+
+          if (onLogin) {
+            onLogin(data);
+          }
+        })
+        .catch(() => {
+          setHasError(true);
+          setProcessing(false);
+        });
     }
-  });
+  }, [appId, onLogin, email, password, processing]);
 
   return (
     <form ref={formRef} onSubmit={handleLoginClicked}>
@@ -71,9 +98,10 @@ const LoginForm = props => {
             required
             size="small"
             label="Email"
-            id="email"
+            name="email"
             type="email"
             variant="outlined"
+            error={hasError}
             disabled={processing}
             className={classes.textField}
             value={email}
@@ -86,6 +114,7 @@ const LoginForm = props => {
                     size="small"
                     aria-label="Email"
                     onClick={null}
+                    tabIndex={-1}
                   >
                     <Email />
                   </IconButton>
@@ -98,10 +127,11 @@ const LoginForm = props => {
             required
             size="small"
             label="Mật khẩu"
-            id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
             variant="outlined"
+            tabIndex={1}
+            error={hasError}
             disabled={processing}
             className={classes.textField}
             value={password}
@@ -120,6 +150,7 @@ const LoginForm = props => {
                 </InputAdornment>
               ),
             }}
+            helperText={hasError ? "Email hoặc mật khẩu không đúng" : ""}
           />
         </div>
         <div className={classes.footer}>
@@ -145,14 +176,18 @@ const LoginForm = props => {
                 {
                   showRegister && (
                     <Grid item xs={12} className={classes.link}>
-                      Chưa có tài khoản ? Tạo tài khoản mới
+                      <Typography variant="body2" onClick={onRegister}>
+                        Chưa có tài khoản ? Tạo tài khoản mới
+                      </Typography>
                     </Grid>
                   )
                 }
                 {
                   showForgotPassword && (
                     <Grid item xs={12} className={classes.link}>
-                      Quên mật khẩu?
+                      <Typography variant="body2" onClick={onForgotPassword}>
+                        Quên mật khẩu?
+                      </Typography>
                     </Grid>
                   )
                 }
@@ -171,6 +206,8 @@ LoginForm.defaultProps = {
   showRegister: true,
   showForgotPassword: true,
   onLogin: null,
+  onRegister: null,
+  onForgotPassword: null,
 };
 
 LoginForm.propTypes = {
@@ -178,6 +215,8 @@ LoginForm.propTypes = {
   showRegister: PropTypes.bool,
   showForgotPassword: PropTypes.bool,
   onLogin: PropTypes.func,
+  onRegister: PropTypes.func,
+  onForgotPassword: PropTypes.func,
 };
 
 export default LoginForm;

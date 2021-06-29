@@ -4,6 +4,7 @@ module.exports = eslintConfig(
     base: true,
     promise: true,
     jsx: true,
+    reacthooks: true,
   },
   {
     env: {

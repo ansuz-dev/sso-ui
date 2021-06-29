@@ -1,5 +1,7 @@
 import React, {useCallback, useRef, useState} from "react";
 import PropTypes from "prop-types";
+import SSO from "@ansuzdev/sso";
+
 import {makeStyles} from "@material-ui/core/styles";
 
 import TextField from "@material-ui/core/TextField";
@@ -12,28 +14,30 @@ import Typography from "@material-ui/core/Typography";
 
 import Email from "@material-ui/icons/Email";
 
-import Card from "./Card";
-import AppInfo from "./AppInfo";
+import formStyle from "../styles/formStyle.js";
 
-import formStyle from "../styles/formStyle";
+import Card from "./Card.js";
+import AppInfo from "./AppInfo.js";
 
 const useStyles = makeStyles(formStyle);
 
 // eslint-disable-next-line max-lines-per-function
-const ForgotPasswordForm = props => {
+const ForgotPasswordForm = ({
+  appId,
+  showRegister,
+  showLogin,
+  onLogin,
+  onRegister,
+  onForgotPassword,
+}) => {
   const classes = useStyles();
-
-  const {
-    appId,
-    showRegister,
-    showLogin,
-  } = props;
 
   const formRef = useRef();
   const [email, setEmail] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-  const handleEmailChanged = useCallback(evt => setEmail(evt.target.value));
+  const handleEmailChanged = useCallback(evt => setEmail(evt.target.value), []);
 
   const handleResetClicked = useCallback(evt => {
     evt.preventDefault();
@@ -44,13 +48,27 @@ const ForgotPasswordForm = props => {
     if (formRef.current.reportValidity()) {
       setProcessing(true);
 
-      // Authenticate to get account info and access token
+      const sso = new SSO({
+        baseUrl: "https://sso.ansuzdev.com",
+        appId,
+      });
 
-      if (props.onResetPassword) {
-        props.onResetPassword();
-      }
+      // Authenticate to get account info and access token
+      sso.requestResetPassword({email})
+        .then(data => {
+          setProcessing(false);
+          setHasError(false);
+
+          if (onForgotPassword) {
+            onForgotPassword(data);
+          }
+        })
+        .catch(() => {
+          setProcessing(false);
+          setHasError(true);
+        });
     }
-  });
+  }, [appId, email, onForgotPassword, processing]);
 
   return (
     <form ref={formRef} onSubmit={handleResetClicked}>
@@ -70,6 +88,7 @@ const ForgotPasswordForm = props => {
             id="email"
             type="email"
             variant="outlined"
+            error={hasError}
             disabled={processing}
             className={classes.textField}
             value={email}
@@ -88,6 +107,7 @@ const ForgotPasswordForm = props => {
                 </InputAdornment>
               ),
             }}
+            helperText={hasError ? "Có lỗi xảy ra. Xin vui lòng thử lại" : ""}
           />
         </div>
         <div className={classes.footer}>
@@ -113,14 +133,18 @@ const ForgotPasswordForm = props => {
                 {
                   showRegister && (
                     <Grid item xs={12} className={classes.link}>
-                      Chưa có tài khoản ? Tạo tài khoản mới
+                      <Typography variant="body2" onClick={onRegister}>
+                        Chưa có tài khoản ? Tạo tài khoản mới
+                      </Typography>
                     </Grid>
                   )
                 }
                 {
                   showLogin && (
                     <Grid item xs={12} className={classes.link}>
-                      Đã có tài khoản ? Đăng nhập ngay
+                      <Typography variant="body2" onClick={onLogin}>
+                        Đã có tài khoản ? Đăng nhập ngay
+                      </Typography>
                     </Grid>
                   )
                 }
@@ -138,14 +162,18 @@ ForgotPasswordForm.displayName = "ForgotPasswordForm";
 ForgotPasswordForm.defaultProps = {
   showRegister: true,
   showLogin: true,
-  onResetPassword: null,
+  onLogin: null,
+  onRegister: null,
+  onForgotPassword: null,
 };
 
 ForgotPasswordForm.propTypes = {
   appId: PropTypes.string.isRequired,
   showRegister: PropTypes.bool,
   showLogin: PropTypes.bool,
-  onResetPassword: PropTypes.func,
+  onLogin: PropTypes.func,
+  onRegister: PropTypes.func,
+  onForgotPassword: PropTypes.func,
 };
 
 export default ForgotPasswordForm;
