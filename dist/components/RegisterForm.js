@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import SSO from "@ansuzdev/sso";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -12,28 +13,32 @@ import Person from "@material-ui/icons/Person";
 import Email from "@material-ui/icons/Email";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Visibility from "@material-ui/icons/Visibility";
-import Card from "./Card";
-import AppInfo from "./AppInfo";
-import formStyle from "../styles/formStyle";
+import formStyle from "../styles/formStyle.js";
+import Card from "./Card.js";
+import AppInfo from "./AppInfo.js";
 const useStyles = makeStyles(formStyle); // eslint-disable-next-line max-lines-per-function
 
-const RegisterForm = props => {
+const RegisterForm = ({
+  baseUrl,
+  appId,
+  showLogin,
+  showForgotPassword,
+  onLogin,
+  onRegister,
+  onForgotPassword
+}) => {
   const classes = useStyles();
-  const {
-    appId,
-    showLogin,
-    showForgotPassword
-  } = props;
   const formRef = useRef();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const handleNameChanged = useCallback(evt => setUserName(evt.target.value));
-  const handleEmailChanged = useCallback(evt => setEmail(evt.target.value));
-  const handlePasswordChanged = useCallback(evt => setPassword(evt.target.value));
-  const handleShowPasswordClicked = useCallback(() => setShowPassword(!showPassword));
+  const [hasError, setHasError] = useState(false);
+  const handleNameChanged = useCallback(evt => setUserName(evt.target.value), []);
+  const handleEmailChanged = useCallback(evt => setEmail(evt.target.value), []);
+  const handlePasswordChanged = useCallback(evt => setPassword(evt.target.value), []);
+  const handleShowPasswordClicked = useCallback(() => setShowPassword(!showPassword), [showPassword]);
   const handleRegisterClicked = useCallback(evt => {
     evt.preventDefault();
     evt.stopPropagation();
@@ -42,11 +47,27 @@ const RegisterForm = props => {
     if (formRef.current.reportValidity()) {
       setProcessing(true); // Authenticate to get account info and access token
 
-      if (props.onRegister) {
-        props.onRegister();
-      }
+      const ssoApi = new SSO({
+        baseUrl,
+        appId
+      });
+      ssoApi.registerOnApp({
+        name: userName,
+        email,
+        password
+      }).then(data => {
+        setProcessing(false);
+        setHasError(false);
+
+        if (onRegister) {
+          onRegister(data);
+        }
+      }).catch(() => {
+        setProcessing(false);
+        setHasError(true);
+      });
     }
-  });
+  }, [appId, baseUrl, email, onRegister, password, processing, userName]);
   return /*#__PURE__*/React.createElement("form", {
     ref: formRef,
     onSubmit: handleRegisterClicked
@@ -77,7 +98,8 @@ const RegisterForm = props => {
       }, /*#__PURE__*/React.createElement(IconButton, {
         size: "small",
         "aria-label": "User name",
-        onClick: null
+        onClick: null,
+        tabIndex: -1
       }, /*#__PURE__*/React.createElement(Person, null)))
     }
   }), /*#__PURE__*/React.createElement(TextField, {
@@ -88,6 +110,7 @@ const RegisterForm = props => {
     id: "email",
     type: "email",
     variant: "outlined",
+    error: hasError,
     disabled: processing,
     className: classes.textField,
     value: email,
@@ -101,7 +124,8 @@ const RegisterForm = props => {
       }, /*#__PURE__*/React.createElement(IconButton, {
         size: "small",
         "aria-label": "Email",
-        onClick: null
+        onClick: null,
+        tabIndex: -1
       }, /*#__PURE__*/React.createElement(Email, null)))
     }
   }), /*#__PURE__*/React.createElement(TextField, {
@@ -113,6 +137,7 @@ const RegisterForm = props => {
     type: showPassword ? "text" : "password",
     autoComplete: "current-password",
     variant: "outlined",
+    error: hasError,
     disabled: processing,
     className: classes.textField,
     value: password,
@@ -128,7 +153,8 @@ const RegisterForm = props => {
         "aria-label": "toggle password visibility",
         onClick: handleShowPasswordClicked
       }, showPassword ? /*#__PURE__*/React.createElement(Visibility, null) : /*#__PURE__*/React.createElement(VisibilityOff, null)))
-    }
+    },
+    helperText: hasError ? "Có lỗi xảy ra. Xin vui lòng thử lại" : ""
   })), /*#__PURE__*/React.createElement("div", {
     className: classes.footer
   }, /*#__PURE__*/React.createElement(Grid, {
@@ -156,23 +182,34 @@ const RegisterForm = props => {
     item: true,
     xs: 12,
     className: classes.link
-  }, "\u0110\xE3 c\xF3 t\xE0i kho\u1EA3n ? \u0110\u0103ng nh\u1EADp ngay"), showForgotPassword && /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/React.createElement(Typography, {
+    variant: "body2",
+    onClick: onLogin
+  }, "\u0110\xE3 c\xF3 t\xE0i kho\u1EA3n ? \u0110\u0103ng nh\u1EADp ngay")), showForgotPassword && /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
     className: classes.link
-  }, "Qu\xEAn m\u1EADt kh\u1EA9u?")))));
+  }, /*#__PURE__*/React.createElement(Typography, {
+    variant: "body2",
+    onClick: onForgotPassword
+  }, "Qu\xEAn m\u1EADt kh\u1EA9u?"))))));
 };
 
 RegisterForm.displayName = "RegisterForm";
 RegisterForm.defaultProps = {
   showLogin: true,
   showForgotPassword: true,
-  onRegister: null
+  onLogin: null,
+  onRegister: null,
+  onForgotPassword: null
 };
 RegisterForm.propTypes = {
+  baseUrl: PropTypes.string.isRequired,
   appId: PropTypes.string.isRequired,
   showLogin: PropTypes.bool,
   showForgotPassword: PropTypes.bool,
-  onRegister: PropTypes.func
+  onLogin: PropTypes.func,
+  onRegister: PropTypes.func,
+  onForgotPassword: PropTypes.func
 };
 export default RegisterForm;
