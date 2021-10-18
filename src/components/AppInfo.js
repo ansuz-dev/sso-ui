@@ -2,28 +2,9 @@ import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import SSO from "@ansuzdev/sso";
 
-import {makeStyles} from "@material-ui/core/styles";
-
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  logo: {
-    width: 128,
-    height: 128,
-  },
-  appName: {marginTop: 24},
-});
+import {Box, Avatar, Typography} from "@mui/material";
 
 const AppInfo = ({appId, className}) => {
-  const classes = useStyles();
-
   const [logo, setLogo] = useState();
   const [appName, setAppName] = useState("Application Name");
 
@@ -45,19 +26,30 @@ const AppInfo = ({appId, className}) => {
   }, [appId]);
 
   return (
-    <div className={`${classes.root} ${className}`}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginBottom: "16px",
+      }}
+      className={className}
+    >
       <Avatar
-        className={classes.logo}
+        sx={{
+          width: "128px",
+          height: "128px",
+        }}
         variant="rounded"
         alt={appName}
         src={logo}
       >
         {appName}
       </Avatar>
-      <Typography variant="h4" className={classes.appName}>
+      <Typography variant="h4" sx={{marginTop: "24px"}}>
         {appName}
       </Typography>
-    </div>
+    </Box>
   );
 };
 

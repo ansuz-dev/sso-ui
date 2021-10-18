@@ -2,27 +2,23 @@ import React, {useCallback, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import SSO from "@ansuzdev/sso";
 
-import {makeStyles} from "@material-ui/core/styles";
+import {
+  Box,
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Grid,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Typography from "@material-ui/core/Typography";
-
-import Person from "@material-ui/icons/Person";
-import Email from "@material-ui/icons/Email";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Visibility from "@material-ui/icons/Visibility";
+import {Person, Email, VisibilityOff, Visibility} from "@mui/icons-material";
 
 import formStyle from "../styles/formStyle.js";
 
 import Card from "./Card.js";
 import AppInfo from "./AppInfo.js";
-
-const useStyles = makeStyles(formStyle);
 
 // eslint-disable-next-line max-lines-per-function
 const RegisterForm = ({
@@ -34,8 +30,6 @@ const RegisterForm = ({
   onRegister,
   onForgotPassword,
 }) => {
-  const classes = useStyles();
-
   const formRef = useRef();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,6 +45,7 @@ const RegisterForm = ({
     () => setShowPassword(!showPassword),
     [showPassword],
   );
+
   const handleRegisterClicked = useCallback(evt => {
     evt.preventDefault();
     evt.stopPropagation();
@@ -82,13 +77,13 @@ const RegisterForm = ({
   return (
     <form ref={formRef} onSubmit={handleRegisterClicked}>
       <Card>
-        <div className={classes.header}>
+        <Box sx={formStyle.header}>
           <AppInfo appId={appId} />
           <Typography>
             Đăng ký tài khoản mới
           </Typography>
-        </div>
-        <div className={classes.cardBody}>
+        </Box>
+        <Box sx={formStyle.cardBody}>
           <TextField
             fullWidth
             required
@@ -98,11 +93,10 @@ const RegisterForm = ({
             type="text"
             variant="outlined"
             disabled={processing}
-            className={classes.textField}
+            sx={formStyle.textField}
             value={userName}
             onChange={handleNameChanged}
             InputProps={{
-              classes: {input: classes.input},
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -127,11 +121,10 @@ const RegisterForm = ({
             variant="outlined"
             error={hasError}
             disabled={processing}
-            className={classes.textField}
+            sx={formStyle.textField}
             value={email}
             onChange={handleEmailChanged}
             InputProps={{
-              classes: {input: classes.input},
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -157,11 +150,10 @@ const RegisterForm = ({
             variant="outlined"
             error={hasError}
             disabled={processing}
-            className={classes.textField}
+            sx={formStyle.textField}
             value={password}
             onChange={handlePasswordChanged}
             InputProps={{
-              classes: {input: classes.input},
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -176,9 +168,9 @@ const RegisterForm = ({
             }}
             helperText={hasError ? "Có lỗi xảy ra. Xin vui lòng thử lại" : ""}
           />
-        </div>
-        <div className={classes.footer}>
-          <Grid container justify="center">
+        </Box>
+        <Box sx={formStyle.footer}>
+          <Grid container justifyContent="center">
             <Grid item xs={6}>
               <Button
                 fullWidth
@@ -186,7 +178,7 @@ const RegisterForm = ({
                 color="primary"
                 variant="contained"
                 type="submit"
-                className={classes.button}
+                sx={formStyle.button}
                 disabled={processing}
                 onClick={handleRegisterClicked}
               >
@@ -196,10 +188,10 @@ const RegisterForm = ({
           </Grid>
           {
             (showLogin || showForgotPassword) && (
-              <Grid container justify="center" className={classes.links}>
+              <Grid container justifyContent="center" sx={formStyle.links}>
                 {
                   showLogin && (
-                    <Grid item xs={12} className={classes.link}>
+                    <Grid item xs={12} sx={formStyle.link}>
                       <Typography variant="body2" onClick={onLogin}>
                         Đã có tài khoản ? Đăng nhập ngay
                       </Typography>
@@ -208,7 +200,7 @@ const RegisterForm = ({
                 }
                 {
                   showForgotPassword && (
-                    <Grid item xs={12} className={classes.link}>
+                    <Grid item xs={12} sx={formStyle.link}>
                       <Typography variant="body2" onClick={onForgotPassword}>
                         Quên mật khẩu?
                       </Typography>
@@ -218,7 +210,7 @@ const RegisterForm = ({
               </Grid>
             )
           }
-        </div>
+        </Box>
       </Card>
     </form>
   );

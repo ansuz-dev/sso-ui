@@ -1,31 +1,28 @@
-const formStyle = theme => ({
+const formStyle = {
   header: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     textAlign: "center",
   },
-  cardBody: {marginTop: 32},
-  footer: {marginTop: 24},
+  cardBody: {marginTop: "32px"},
+  footer: {marginTop: "24px"},
   textField: {
-    "marginBottom": 24,
+    "marginBottom": "24px",
     "&:last-child": {marginBottom: 0},
   },
-  button: {minHeight: 36},
+  button: {minHeight: "36px"},
   input: {
     paddingTop: "11.5px",
     paddingBottom: "11.5px",
   },
-  links: {marginTop: 32},
+  links: {marginTop: "32px"},
   link: {
     "fontSize": 12,
     "cursor": "pointer",
     "textAlign": "center",
-    "marginBottom": 8,
-    "color": theme.palette.primary.main,
-    "&:last-child": {marginBottom: 0},
-    "&:hover": {color: theme.palette.primary.dark},
+    "marginBottom": "8px",
   },
-});
+};
 
 export default formStyle;

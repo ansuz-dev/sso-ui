@@ -2,24 +2,23 @@ import React, {useCallback, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import SSO from "@ansuzdev/sso";
 
-import {makeStyles} from "@material-ui/core/styles";
+import {
+  Box,
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Grid,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Typography from "@material-ui/core/Typography";
-
-import Email from "@material-ui/icons/Email";
+import {Email} from "@mui/icons-material";
 
 import formStyle from "../styles/formStyle.js";
 
 import Card from "./Card.js";
 import AppInfo from "./AppInfo.js";
-
-const useStyles = makeStyles(formStyle);
 
 // eslint-disable-next-line max-lines-per-function
 const ForgotPasswordForm = ({
@@ -30,8 +29,6 @@ const ForgotPasswordForm = ({
   onRegister,
   onForgotPassword,
 }) => {
-  const classes = useStyles();
-
   const formRef = useRef();
   const [email, setEmail] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -73,13 +70,13 @@ const ForgotPasswordForm = ({
   return (
     <form ref={formRef} onSubmit={handleResetClicked}>
       <Card>
-        <div className={classes.header}>
+        <Box sx={formStyle.header}>
           <AppInfo appId={appId} />
           <Typography>
             Hãy nhập email của bạn để thực hiện cài đặt lại mật khẩu
           </Typography>
-        </div>
-        <div className={classes.cardBody}>
+        </Box>
+        <Box sx={formStyle.cardBody}>
           <TextField
             fullWidth
             required
@@ -90,11 +87,10 @@ const ForgotPasswordForm = ({
             variant="outlined"
             error={hasError}
             disabled={processing}
-            className={classes.textField}
+            sx={formStyle.textField}
             value={email}
             onChange={handleEmailChanged}
             InputProps={{
-              classes: {input: classes.input},
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
@@ -109,9 +105,9 @@ const ForgotPasswordForm = ({
             }}
             helperText={hasError ? "Có lỗi xảy ra. Xin vui lòng thử lại" : ""}
           />
-        </div>
-        <div className={classes.footer}>
-          <Grid container justify="center">
+        </Box>
+        <Box sx={formStyle.footer}>
+          <Grid container justifyContent="center">
             <Grid item xs={6}>
               <Button
                 fullWidth
@@ -119,7 +115,7 @@ const ForgotPasswordForm = ({
                 color="primary"
                 variant="contained"
                 type="submit"
-                className={classes.button}
+                sx={formStyle.button}
                 disabled={processing}
                 onClick={handleResetClicked}
               >
@@ -129,10 +125,10 @@ const ForgotPasswordForm = ({
           </Grid>
           {
             (showRegister || showLogin) && (
-              <Grid container justify="center" className={classes.links}>
+              <Grid container justifyContent="center" sx={formStyle.links}>
                 {
                   showRegister && (
-                    <Grid item xs={12} className={classes.link}>
+                    <Grid item xs={12} sx={formStyle.link}>
                       <Typography variant="body2" onClick={onRegister}>
                         Chưa có tài khoản ? Tạo tài khoản mới
                       </Typography>
@@ -141,7 +137,7 @@ const ForgotPasswordForm = ({
                 }
                 {
                   showLogin && (
-                    <Grid item xs={12} className={classes.link}>
+                    <Grid item xs={12} sx={formStyle.link}>
                       <Typography variant="body2" onClick={onLogin}>
                         Đã có tài khoản ? Đăng nhập ngay
                       </Typography>
@@ -151,7 +147,7 @@ const ForgotPasswordForm = ({
               </Grid>
             )
           }
-        </div>
+        </Box>
       </Card>
     </form>
   );
