@@ -2,27 +2,23 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 import React from "react";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-const useStyles = makeStyles({
-  root: {
-    flex: "1 1 auto",
-    WebkitBoxFlex: "1",
-    position: "relative"
-  }
-});
+import { Box } from "@mui/material";
 
 const CardBody = props => {
-  const classes = useStyles();
   const {
     children,
     ...rest
   } = props;
-  return /*#__PURE__*/React.createElement("div", _extends({
-    className: classes.root
+  return /*#__PURE__*/React.createElement(Box, _extends({
+    sx: {
+      flex: "1 1 auto",
+      WebkitBoxFlex: "1",
+      position: "relative"
+    }
   }, rest), children);
 };
 
-CardBody.displayName = "Card";
+CardBody.displayName = "CardBody";
 CardBody.propTypes = {
   children: PropTypes.node.isRequired
 };

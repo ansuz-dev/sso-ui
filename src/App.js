@@ -16,8 +16,8 @@ const App = () => (
     <Grid container justifyContent="center">
       <Grid item xs={12} sm={6} md={4}>
         <RegisterForm
-          baseUrl="https://sso.ansuzdev.com"
-          appId="ewmF3lYlzcc8m3pN5js7tSrf+LArz0c+"
+          baseUrl="https://ezy.ansuzdev.com/api/v1/auth/register"
+          appId="5sbDgsePcOKcblUoKu1yUWIxBkpV7bJQ"
         />
       </Grid>
     </Grid>

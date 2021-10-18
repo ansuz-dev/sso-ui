@@ -1,22 +1,11 @@
 import React, { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import SSO from "@ansuzdev/sso";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Typography from "@material-ui/core/Typography";
-import Person from "@material-ui/icons/Person";
-import Email from "@material-ui/icons/Email";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Visibility from "@material-ui/icons/Visibility";
+import { Box, TextField, Button, IconButton, InputAdornment, Grid, CircularProgress, Typography } from "@mui/material";
+import { Person, Email, VisibilityOff, Visibility } from "@mui/icons-material";
 import formStyle from "../styles/formStyle.js";
 import Card from "./Card.js";
-import AppInfo from "./AppInfo.js";
-const useStyles = makeStyles(formStyle); // eslint-disable-next-line max-lines-per-function
+import AppInfo from "./AppInfo.js"; // eslint-disable-next-line max-lines-per-function
 
 const RegisterForm = ({
   baseUrl,
@@ -27,7 +16,6 @@ const RegisterForm = ({
   onRegister,
   onForgotPassword
 }) => {
-  const classes = useStyles();
   const formRef = useRef();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -71,12 +59,12 @@ const RegisterForm = ({
   return /*#__PURE__*/React.createElement("form", {
     ref: formRef,
     onSubmit: handleRegisterClicked
-  }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
-    className: classes.header
+  }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement(Box, {
+    sx: formStyle.header
   }, /*#__PURE__*/React.createElement(AppInfo, {
     appId: appId
-  }), /*#__PURE__*/React.createElement(Typography, null, "\u0110\u0103ng k\xFD t\xE0i kho\u1EA3n m\u1EDBi")), /*#__PURE__*/React.createElement("div", {
-    className: classes.cardBody
+  }), /*#__PURE__*/React.createElement(Typography, null, "\u0110\u0103ng k\xFD t\xE0i kho\u1EA3n m\u1EDBi")), /*#__PURE__*/React.createElement(Box, {
+    sx: formStyle.cardBody
   }, /*#__PURE__*/React.createElement(TextField, {
     fullWidth: true,
     required: true,
@@ -86,13 +74,10 @@ const RegisterForm = ({
     type: "text",
     variant: "outlined",
     disabled: processing,
-    className: classes.textField,
+    sx: formStyle.textField,
     value: userName,
     onChange: handleNameChanged,
     InputProps: {
-      classes: {
-        input: classes.input
-      },
       endAdornment: /*#__PURE__*/React.createElement(InputAdornment, {
         position: "end"
       }, /*#__PURE__*/React.createElement(IconButton, {
@@ -112,13 +97,10 @@ const RegisterForm = ({
     variant: "outlined",
     error: hasError,
     disabled: processing,
-    className: classes.textField,
+    sx: formStyle.textField,
     value: email,
     onChange: handleEmailChanged,
     InputProps: {
-      classes: {
-        input: classes.input
-      },
       endAdornment: /*#__PURE__*/React.createElement(InputAdornment, {
         position: "end"
       }, /*#__PURE__*/React.createElement(IconButton, {
@@ -139,13 +121,10 @@ const RegisterForm = ({
     variant: "outlined",
     error: hasError,
     disabled: processing,
-    className: classes.textField,
+    sx: formStyle.textField,
     value: password,
     onChange: handlePasswordChanged,
     InputProps: {
-      classes: {
-        input: classes.input
-      },
       endAdornment: /*#__PURE__*/React.createElement(InputAdornment, {
         position: "end"
       }, /*#__PURE__*/React.createElement(IconButton, {
@@ -155,11 +134,11 @@ const RegisterForm = ({
       }, showPassword ? /*#__PURE__*/React.createElement(Visibility, null) : /*#__PURE__*/React.createElement(VisibilityOff, null)))
     },
     helperText: hasError ? "Có lỗi xảy ra. Xin vui lòng thử lại" : ""
-  })), /*#__PURE__*/React.createElement("div", {
-    className: classes.footer
+  })), /*#__PURE__*/React.createElement(Box, {
+    sx: formStyle.footer
   }, /*#__PURE__*/React.createElement(Grid, {
     container: true,
-    justify: "center"
+    justifyContent: "center"
   }, /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 6
@@ -169,26 +148,26 @@ const RegisterForm = ({
     color: "primary",
     variant: "contained",
     type: "submit",
-    className: classes.button,
+    sx: formStyle.button,
     disabled: processing,
     onClick: handleRegisterClicked
   }, processing ? /*#__PURE__*/React.createElement(CircularProgress, {
     size: 20
   }) : "Tạo tài khoản"))), (showLogin || showForgotPassword) && /*#__PURE__*/React.createElement(Grid, {
     container: true,
-    justify: "center",
-    className: classes.links
+    justifyContent: "center",
+    sx: formStyle.links
   }, showLogin && /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
-    className: classes.link
+    sx: formStyle.link
   }, /*#__PURE__*/React.createElement(Typography, {
     variant: "body2",
     onClick: onLogin
   }, "\u0110\xE3 c\xF3 t\xE0i kho\u1EA3n ? \u0110\u0103ng nh\u1EADp ngay")), showForgotPassword && /*#__PURE__*/React.createElement(Grid, {
     item: true,
     xs: 12,
-    className: classes.link
+    sx: formStyle.link
   }, /*#__PURE__*/React.createElement(Typography, {
     variant: "body2",
     onClick: onForgotPassword
