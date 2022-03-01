@@ -1,6 +1,6 @@
 {
   "name": "@ansuzdev/sso-ui",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "dist/components/index.js",
   "scripts": {
     "start": "react-scripts start",
@@ -38,26 +38,26 @@
     ]
   },
   "dependencies": {
-    "@ansuzdev/sso": "^1.2.2",
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
+    "@ansuzdev/sso": "^1.2.3",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "@material-ui/icons": "^4.11.2",
-    "@mui/icons-material": "^5.0.4",
-    "@mui/material": "^5.0.4",
-    "prop-types": "^15.7.2"
+    "@mui/icons-material": "^5.4.4",
+    "@mui/material": "^5.4.4",
+    "prop-types": "^15.8.1"
   },
   "peerDependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.7",
+    "@babel/cli": "^7.17.6",
     "@babel/preset-react": "^7.14.5",
-    "@keeex/eslint-config": "^1.5.8",
-    "@testing-library/jest-dom": "^5.11.4",
-    "eslint-plugin-promise": "^5.1.0",
-    "web-vitals": "^2.1.2"
+    "@keeex/eslint-config": "^1.7.1",
+    "@testing-library/jest-dom": "^5.16.2",
+    "eslint-plugin-promise": "^6.0.0",
+    "web-vitals": "^2.1.4"
   },
   "babel": {
     "presets": [
